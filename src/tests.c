@@ -4,8 +4,12 @@
 
 int main(void) {
     A_String s1;
-    A_String_init(&s1, 20);
-    A_String_setStr(&s1, "Hello, World");
+    A_String_setAndInit(&s1, 25, "Hello ");
 
-    printf("%s | %zu \n", A_String_getStr(&s1), s1._len);
+    A_String s2;
+    A_String_setAndInit(&s2, 15, "World");
+
+    A_String_catStr(&s1, &s2);
+    printf("%s \n", A_String_getStr(&s1));
+
 }
