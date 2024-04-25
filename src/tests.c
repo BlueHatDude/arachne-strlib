@@ -6,6 +6,7 @@ int main(void) {
     A_String s1;
     A_String_init(&s1, 25);
     A_String_setStr(&s1, "Hello ");
+    printf("%s \n", A_String_getStr(&s1));
 
     A_String s2;
     A_String_setAndInit(&s2, 15, "World");
@@ -21,4 +22,5 @@ int main(void) {
 
     A_String_deinit(&s1);
     A_String_deinit(&s2);    
+    A_String_deinit(&s3);
 }

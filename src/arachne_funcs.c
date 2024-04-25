@@ -92,6 +92,10 @@ char* A_String_getStr(const A_String* astr) {
  */
 int A_String_catStr(A_String* dest, const A_String* src) {
     
+    if (src->_len == 0) {
+        return 0;
+    }
+
     if ( (src->_len + dest->_len) < dest->_maxLen) {
         memset(dest->_data + dest->_len, '\0', sizeof(char) * dest->_maxLen);
         memcpy(dest->_data + dest->_len, src->_data, sizeof(char) * src->_len);
