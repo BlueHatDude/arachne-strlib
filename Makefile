@@ -3,7 +3,7 @@ lib: src/arachne_funcs.c src/arachne_strlib.h
 	ar -rc libarachne.a arachne_funcs.o
 
 tests: clean lib
-	$(CC) -o tests.out src/tests.c arachne_funcs.o
+	$(CC) -o tests src/tests.c arachne_funcs.o
 
 clean:
-	$(RM) *.o *.a *.out
+	$(RM) *.o *.a tests

@@ -4,71 +4,27 @@
 
 
 /**
- * @brief initializes values of astr struct, should be called before any other 'A_String' function
- * 
- * @param astr 
- * @param maxLen 
- * @return 0 if A_String not successfully initialized, else 1
- */
-int A_String_init(A_String* astr, const size_t maxLen) {
-    astr->_maxLen = maxLen;
-    astr->_len = 0;
-    astr->_data = calloc(maxLen, sizeof(char) * maxLen);
-
-    if (astr->_data == NULL) {
-        return 0;
-    } else {
-        return 1;
-    }
-
-}
-
-
-/**
- * @brief checks to see if astr data is NULL
- * 
- * @param astr 
- * @return 0 if is null, 1 if isn't null
- */
-int A_String_getStatus(const A_String* astr) {
-    if (astr->_data == NULL) {
-        return 0;
-    } else {
-        return 1;
-    }
-}
-
-
-/**
- * @brief frees memory used by astr, should be called after last use of astr
- * 
- * @param astr 
- */
-void A_String_deinit(A_String* astr) {
-    free(astr->_data);
-}
-
-
-/**
  * @brief sets data of A_String
  * 
  * @param astr A_String reference 
  * @param data data being assigned to A_String 
  * @return 0 if data isn't set, else returns 1
  */
-int A_String_setStr(A_String* astr, char* data) {
+A_StringErrorCode A_String_setStr(A_String* astr, const char* data) {
+
+    if (data == NULL)
+        return A_STRING_NULL_SET_ERROR;
 
     size_t len = strlen(data);
 
     if (len < astr->_maxLen) {
-        memset(astr->_data, '\0', sizeof(char) * astr->_maxLen);
-        memcpy(astr->_data, data, len);
+        memset(astr->data, '\0', sizeof(char) * astr->_maxLen);
+        memcpy(astr->data, data, len);
         astr->_len = len;
-        return 1;
+        return A_STRING_NO_ERROR;
     } else {
-        return 0;
+        return A_STRING_INSUFFICIENT_SPACE;
     }
-
 }
 
 
@@ -79,7 +35,7 @@ int A_String_setStr(A_String* astr, char* data) {
  * @return char* 
  */
 char* A_String_getStr(const A_String* astr) {
-    return astr->_data;
+    return astr->data;
 }
 
 
@@ -97,8 +53,8 @@ int A_String_catStr(A_String* dest, const A_String* src) {
     }
 
     if ( (src->_len + dest->_len) < dest->_maxLen) {
-        memset(dest->_data + dest->_len, '\0', sizeof(char) * dest->_maxLen);
-        memcpy(dest->_data + dest->_len, src->_data, sizeof(char) * src->_len);
+        memset(dest->data + dest->_len, '\0', sizeof(char) * dest->_maxLen);
+        memcpy(dest->data + dest->_len, src->data, sizeof(char) * src->_len);
 
         return 1;
     } else {
@@ -109,20 +65,37 @@ int A_String_catStr(A_String* dest, const A_String* src) {
 
 
 /**
- * @brief initializes astr with default value
+ * @brief initializes values of astr struct, should be called before any other 'A_String' function
  * 
  * @param astr 
  * @param maxLen 
- * @param data 
- * @return 0 if full initialization unsuccessful, else 1 
+ * @return NULL if astr not successfully initialized
  */
-int A_String_setAndInit(A_String* astr, size_t maxLen, char* data) {
-    int initStatus = A_String_init(astr, maxLen);
+A_String* A_String_init(const char* init_value, const size_t maxLen) {
+    A_String* astr = malloc(sizeof(A_String));
     
-    if (initStatus) {
-        return A_String_setStr(astr, data);
-    } else {
-        return initStatus;
-    }
+    if (astr == NULL)
+        return NULL;
 
+    astr->_maxLen = maxLen;
+    astr->_len = 0;
+    astr->data = calloc(maxLen, sizeof(char) * maxLen);
+
+    if (astr->data == NULL)
+        return NULL;
+
+    A_String_setStr(astr, init_value);
+
+    return astr;
 }
+
+
+/**
+ * @brief frees memory used by astr, should be called after last use of astr
+ * 
+ * @param astr 
+ */
+void A_String_deinit(A_String* astr) {
+    free(astr->data);
+}
+
